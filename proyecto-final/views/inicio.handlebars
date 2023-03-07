@@ -1,0 +1,17 @@
+<a href="/api/carrito">ir al carrito</a>
+<button onclick="location.href='/api/auth/logout'">logout</button>
+
+<div>
+    <table>
+        <tr> 
+            <th>nombre</th><th>precio</th> 
+    {{#each productos}}
+        <tr>
+            <td>{{this.nombre}}</td>
+            <td>{{this.precio}}</td>
+            <button>agregar al carrito</button>
+        </tr>    
+    {{/each}} 
+        </tr> 
+    </table>
+</div>  
