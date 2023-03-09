@@ -1,18 +1,26 @@
 <h1>aca va el carrito</h1>
 
+{{#if productosEnCarrito}}
+
 <div>
     <table>
         <tr> 
-            <th>nombre</th><th>precio</th> 
-    {{#each productos}}
+            <th>nombre</th><th>precio</th>
+    {{#each productosCarrito}}
         <tr>
             <td>{{this.nombre}}</td>
             <td>{{this.precio}}</td>
-            <button>agregar al carrito</button>
-            <button>editar</button>
-            <button>eliminar</button>
+            <form action="/api/eliminardelcarrito/{{this._id}}" method="post">
+            <td><button type="submit">eliminar</button></td>
+            </form>
         </tr>    
     {{/each}} 
         </tr> 
     </table>
-</div>  
+    <form action="/api/confirmarcompra" method="post">
+    <button type="submit">confirmar compra</button>
+    </form>
+</div>   
+{{else}}
+    <h3>carrito vacio</h3>
+{{/if}}

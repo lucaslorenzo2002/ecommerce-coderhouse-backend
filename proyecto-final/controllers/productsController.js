@@ -22,19 +22,16 @@ const postCrearProducto = asyncHandler(async (req, res) => {
 
     await prodsContainer.createProduct(newProduct)
     
-    res.redirect('productos')
+    res.redirect('/api/productos')
 })
-
-const getInicioAdmin = asyncHandler(async (req, res) => {
-
-    const productos = await prodsContainer.readAll()
-
-    res.render('inicioAdmin', {productos})
-});
 
 const getProductos = asyncHandler(async (req, res) => {
 
-     const productos = await prodsContainer.readAll()
+    const productos = await prodsContainer.readAll()
+
+    if(req.user.rol === 'admin'){
+        return res.render('inicioAdmin', {productos})
+    }
 
     res.render('inicio', {productos})
 });
@@ -64,5 +61,4 @@ module.exports = {
     postActualizarProductos,
     eliminarProducto,
     getProductos,
-    getInicioAdmin
 }

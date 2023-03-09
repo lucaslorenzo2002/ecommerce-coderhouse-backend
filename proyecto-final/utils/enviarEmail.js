@@ -1,9 +1,10 @@
 const nodemailer = require('nodemailer');
+const logger = require('../utils/logger');
 
 const sendEmail = async(from, to, subject, message) => {
     const transporter = nodemailer.createTransport({
         host: process.env.EMAIL_HOST,
-        port: 597,
+        port: 587,
         secure: false,
         auth:{
             user: process.env.EMAIL_USER,
@@ -23,9 +24,9 @@ const sendEmail = async(from, to, subject, message) => {
 
     transporter.sendMail(options, function(err, info) {
         if(err){
-            console.log(err);
+            logger.info(err);
         }else{
-            console.log(info);
+            logger.info(info);
         }
     })
 }

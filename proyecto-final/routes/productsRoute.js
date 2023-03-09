@@ -3,8 +3,6 @@ const {requireAuthentication, isAdmin }= require('../middlewares/authMiddlewares
 
 const productRouter = require('./router')
 
-productRouter.get('/inicioadmin', requireAuthentication, isAdmin, getInicioAdmin)
-
 productRouter.get('/crearproducto', requireAuthentication, isAdmin, getCrearProducto)
 productRouter.post('/crearproducto', requireAuthentication, isAdmin, postCrearProducto)
 

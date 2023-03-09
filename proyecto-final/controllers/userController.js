@@ -5,7 +5,7 @@ const connection = require('../config/mongooseConfig')
 
 //REQUIRE A CLASES DE MONGOOSE
 const  AuthCrud  = require('../container/authContainer');
-const User = require('../schemas/userModel');
+
 
 //CONTENEDOR DE MONGOOSE
 const authContainer = new AuthCrud(connection);

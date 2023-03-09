@@ -10,11 +10,11 @@
         <tr>
             <td>{{this.nombre}}</td>
             <td>{{this.precio}}</td>
-            <button>agregar al carrito</button>
-            <button>editar</button>
+            <td><button>agregar al carrito</button></td>
+            <td><button>editar</button></td>
             <form action="/api/eliminarproducto/{{this._id}}?_method=DELETE" method="post">
             <input type="hidden" name="_method" value="DELETE">
-            <button>eliminar</button>
+            <td><button>eliminar</button></td>
             </form>
         </tr>    
     {{/each}} 

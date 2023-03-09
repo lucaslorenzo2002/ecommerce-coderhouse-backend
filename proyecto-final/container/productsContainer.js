@@ -1,4 +1,6 @@
 const Product  = require('../schemas/productModel');
+const logger = require('../utils/logger');
+
 
 class productsCRUD{
     constructor(connection){
@@ -8,10 +10,10 @@ class productsCRUD{
     async createProduct(prod){
         try{
             const data = await Product.create(prod);
-            console.log('producto creado')
-            console.log(data)            
+            logger.info('producto creado')
+            logger.info(data)            
         }catch(err){
-            console.log(err)
+            logger.info(err)
         }
     } 
 
@@ -20,7 +22,7 @@ class productsCRUD{
             const find = await Product.find().lean()
             return find
         }catch(err){
-            console.log(err)
+            logger.info(err)
         }
     }
 
@@ -29,7 +31,7 @@ class productsCRUD{
             const findId = await Product.findById({_id: id}).lean();
             return findId
         }catch(err){
-            console.log(err)
+            logger.info(err)
         }       
     }           
 
@@ -45,10 +47,9 @@ class productsCRUD{
     async deleteOne(id){
         try{
             const del = await Product.deleteOne({_id: id});
-            console.log('producto eliminado con exito')
             return del
         }catch(err){
-            console.log(err)
+            logger.info(err)
         }
     }
 }

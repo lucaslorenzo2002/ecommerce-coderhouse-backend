@@ -1,11 +1,47 @@
 const express = require('express');
 const path = require('path');
+const cluster = require('os');
 const session = require('express-session');
 const passport = require('passport');
-const methodOverride = require('method-override')
+const methodOverride = require('method-override');
+const logger = require('./utils/logger');
+const parseArg = require('minimist');
+const os = require('os');
 
 const app = express();
-require('dotenv').config
+
+const options = {
+    alias:{
+        p:'port',
+        m:'mode',
+        d:'debug'
+    },
+    default:{
+        port:8080,
+        mode:'FORK',
+        debug: true
+    }
+}
+
+const args = parseArg(process.argv.slice(2), options);
+
+//NUMERO DE PROCESADORES
+const numCpus = os.cpus().length;
+
+if(args.mode === 'FORK' && cluster.isPrimary){
+    logger.info(numCpus);
+    logger.info(process.pid);
+    for(let i = 0; i < numCpus; i++){
+        cluster.fork()
+    }
+    
+    cluster.on('exit', worker => {
+        console.log(worker.process.pid);
+        cluster.fork()
+    })
+}else{
+
+require('dotenv').config()
 require('./config/passport')
 
 //CONEXION A BD
@@ -52,8 +88,8 @@ app.use('/api/auth', authRouter)
 const PORT = process.env.PORT || 8080;
 
 const server = app.listen(PORT, () => {
-    console.log(`escuchando en: ${PORT}`)
+    logger.info(`escuchando en: ${PORT}`)
 })
 
-server.on('error', err => console.log(err))
-
+server.on('error', err => logger.info(err))
+}

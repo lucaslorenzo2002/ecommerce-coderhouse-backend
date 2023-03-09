@@ -40,7 +40,11 @@ const userSchema = new mongoose.Schema({
     },
     avatar:{
         type: String
-    }
+    },
+    /* carrito:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cart'
+    } */
 })
 
 

@@ -1,20 +1,24 @@
 const passport = require('passport');
-const localStrategy = require('passport-local').Strategy
-const bcrypt = require('bcrypt')
+const localStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
+const sendEmail = require('../utils/enviarEmail');
 
 //CONEXION MONGOOSE
 const connection = require('../config/mongooseConfig')
 
 //REQUIRE A CLASES DE MONGOOSE
-const AuthCrud  = require('../container/authContainer');
-const sendEmail = require('../utils/enviarEmail');
+const AuthCrud = require('../container/authContainer');
+const CartCrud = require('../container/cartsContainer');
 
 //CONTENEDOR DE MONGOOSE
 const authContainer = new AuthCrud(connection);
+const cartContainer = new CartCrud(connection);
 
 const hashPassword = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null)
 }
+
+//ESTRATEGIA REGISTRO
 
 passport.use('register', new localStrategy({
     passReqToCallback: true
@@ -47,11 +51,10 @@ passport.use('register', new localStrategy({
         rol
     }
 
-    authContainer.createUser(nuevoUsuario)
-
+    const nuevoUsuarioMongoose  = await authContainer.createUser(nuevoUsuario)
+    
     let mensaje = `
     <div>
-    <h2>nuevo usuario registrado</h2>
     <p>username:${nuevoUsuario.username}</p>
     <p>email:${nuevoUsuario.email}</p>
     <p>rol:${nuevoUsuario.rol}</p>
@@ -72,8 +75,14 @@ passport.use('register', new localStrategy({
         throw new Error ('mail no enviado')
     } 
 
-    done(null, nuevoUsuario);}
+    const usuarioId = nuevoUsuarioMongoose._id;
+
+    await cartContainer.nuevoCarrito(usuarioId)
+
+    done(null, nuevoUsuario)}
 ))
+
+//ESTRATEGIA LOGIN
 
 passport.use('login', new localStrategy(
     async(username, password, done) => {
